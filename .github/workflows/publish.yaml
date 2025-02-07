@@ -81,12 +81,12 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@vector-im-hugh'
+          scope: '@element-call'
       - name: Publish npm
         working-directory: embedded/web
         run: |
-          npm version ${{ github.event.release.tag_name }}
-          npm publish
+          npm version ${{ github.event.release.tag_name }} --no-git-tag-version
+          npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -95,4 +95,4 @@ jobs:
         with:
           append_body: |
             ## NPM
-            - [@vector-im-hugh/element-call-embedded](https://npm.pkg.github.com/package/@vector-im-hugh/element-call-embedded/v/${{ github.event.release.tag_name }})
+            - [@element-call/element-call-embedded](https://npm.pkg.github.com/package/@element-call/element-call-embedded/v/${{ github.event.release.tag_name }})
