@@ -13,7 +13,7 @@ jobs:
     if: ${{ github.event_name == 'release' }}
     uses: ./.github/workflows/build-element-call.yaml
     with:
-      vite_app_version: ${{ github.event.release.tag_name || github.sha }}
+      vite_app_version: ${{ github.event.release.tag_name }}
     secrets:
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -75,7 +75,7 @@ jobs:
       
       - name: 📥 Download built element-call artifact
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4        
-        with:          
+        with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id || github.run_id }}
           name: build-output
@@ -85,6 +85,8 @@ jobs:
         run: |
           npm version ${{ github.event.release.tag_name }}
           npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload
         uses: softprops/action-gh-release@v2
         with:
