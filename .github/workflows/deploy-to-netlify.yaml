@@ -45,7 +45,7 @@ jobs:
             Do you trust the author of this PR? Maybe this build will steal your keys or give you malware.
             Exercise caution. Use test accounts.
 
-      - name: 📥 Download artifact
+      - name: 📥 Download built element-call artifact
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           github-token: ${{ secrets.ELEMENT_BOT_TOKEN }}
