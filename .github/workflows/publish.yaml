@@ -169,3 +169,60 @@ jobs:
               implementation 'io.element.call:embedded-element-call:${{ env.VERSION}}'
             }
             ```
+
+  publish_ios:
+    needs: build_element_call
+    if: always()
+    name: Publish SwiftPM Library
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: element-call
+      
+      - name: 📥 Download built element-call artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4        
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id || github.run_id }}
+          name: build-output
+          path: element-call/embedded/ios/EmbeddedElementCall/dist
+
+
+      - name: Get version
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+          
+      - name: Checkout element-call-swift
+        uses: actions/checkout@v4
+        with:
+          repository: element-hq/element-call-swift
+          path: element-call-swift
+          token: ${{ secrets.SWIFT_RELEASE_TOKEN }}
+      
+      - name: Copy files
+        run: rsync -a --delete --exclude .git element-call/embedded/ios/ element-call-swift
+      
+      - name: Commit and tag
+        working-directory: element-call-swift
+        run: |
+          git add -A
+          git commit -am "Release ${{ env.VERSION }}"
+          git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }}"
+          git push --tags
+          
+      # - name: Add release note
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     append_body: true
+      #     body: |
+      #       ## iOS
+      #       ```
+      #       dependencies {
+      #         implementation 'io.element.call:embedded-element-call:${{ env.VERSION}}'
+      #       }
+      #       ```            
