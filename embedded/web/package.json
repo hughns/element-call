@@ -1,0 +1,13 @@
+{
+  "name": "@vector-im-hugh/element-call-embedded",
+  "version": "0.0.0",
+  "files": [
+    "README.md",
+    "LICENSE-AGPL-3.0",
+    "LICENSE-COMMERCIAL",
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

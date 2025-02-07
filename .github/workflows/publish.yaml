@@ -24,13 +24,11 @@ jobs:
     if: always()
     name: Publish tarball
     runs-on: ubuntu-latest
-    outputs:
-      unix_time: ${{steps.current-time.outputs.unix_time}}
     permissions:
       contents: write # required to upload release asset
       packages: write
     steps:
-      - name: 📥 Download artifact
+      - name: 📥 Download built element-call artifact
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,6 +51,7 @@ jobs:
   publish_docker:
     needs: build_element_call
     if: always()
+    name: Publish docker
     permissions:
       contents: write
       packages: write
@@ -62,3 +61,33 @@ jobs:
       docker_tags: |
         type=sha,format=short,event=branch
         type=semver,pattern=v{{version}}
+  publish_npm:
+    needs: build_element_call
+    if: always()
+    name: Publish NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to upload release asset
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: 📥 Download built element-call artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4        
+        with:          
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id || github.run_id }}
+          name: build-output
+          path: embedded/web/dist
+      - name: Publish npm
+        working-directory: embedded/web
+        run: |
+          npm version ${{ github.event.release.tag_name }}
+          npm publish
+      - name: Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          append_body: |
+            ## NPM
+            - [@vector-im-hugh/element-call-embedded](https://npm.pkg.github.com/package/@vector-im-hugh/element-call-embedded/v/${{ github.event.release.tag_name }})
