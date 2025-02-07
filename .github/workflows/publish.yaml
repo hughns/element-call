@@ -14,6 +14,7 @@ jobs:
     uses: ./.github/workflows/build-element-call.yaml
     with:
       vite_app_version: ${{ github.event.release.tag_name }}
+
   publish_tarball:
     needs: build_element_call
     if: always()
@@ -43,6 +44,7 @@ jobs:
           files: |
             element-call-${{ github.event.release.tag_name }}.tar.gz
             element-call-${{ github.event.release.tag_name }}.tar.gz.sha256
+
   publish_docker:
     needs: build_element_call
     if: always()
@@ -56,6 +58,22 @@ jobs:
       docker_tags: |
         type=sha,format=short,event=branch
         type=semver,pattern=v{{version}}
+  add_docker_release_note:
+    needs: publish_docker
+    name: Add docker release note
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add release note
+        uses: softprops/action-gh-release@v2
+        with:
+          append_body: |
+            ## Docker
+            Element Call is available as a Docker image from the [GitHub Container Registry](https://github.com/element-hq/element-call/pkgs/container/element-call).
+
+            ```
+            docker pull ghcr.io/element-hq/element-call:${{ github.event.release.tag_name }}
+            ```
+
   publish_npm:
     needs: build_element_call
     if: always()
@@ -87,7 +105,7 @@ jobs:
         working-directory: embedded/web
         run: |
           npm version ${{ github.event.release.tag_name }} --no-git-tag-version
-          npm publish --provenance
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
