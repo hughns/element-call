@@ -120,3 +120,52 @@ jobs:
             ```
             npm install @hughns/element-call@${{ env.NPM_VERSION }}
             ```
+
+  publish_android:
+    needs: build_element_call
+    if: always()
+    name: Publish Android Library
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: 📥 Download built element-call artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4        
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id || github.run_id }}
+          name: build-output
+          path: embedded/android/library/dist
+
+      - name: ☕️ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Get version
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+          
+      - name: ⬆️ Publish
+        uses: gradle/gradle-build-action@v3
+        with:
+          build-root-directory: embedded/android
+          arguments: publish -PMAVEN_VERSION_NAME=${{ env.VERSION }}
+          
+      - name: Add release note
+        uses: softprops/action-gh-release@v2
+        with:
+          append_body: true
+          body: |
+            ## Android
+            ```
+            dependencies {
+              implementation 'io.element.call:embedded-element-call:${{ env.VERSION}}'
+            }
+            ```
