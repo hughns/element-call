@@ -50,12 +50,27 @@ jobs:
     permissions:
       contents: write
       packages: write
-    uses: ./.github/workflows/build-and-publish-docker.yaml
-    with:
-      artifact_run_id: ${{ github.event.workflow_run.id || github.run_id }}
-      docker_tags: |
-        type=sha,format=short,event=branch
-        type=semver,pattern=v{{version}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish docker
+        uses: ./.github/workflows/build-and-publish-docker.yaml
+        with:
+          artifact_run_id: ${{ github.event.workflow_run.id || github.run_id }}
+          docker_tags: |
+            type=sha,format=short,event=branch
+            type=semver,pattern=v{{version}}
+
+      - name: Add release note
+        uses: softprops/action-gh-release@v2
+        with:
+          append_body: |
+            ## Docker
+            Element Call is available as a Docker image from the [GitHub Container Registry](https://github.com/element-hq/element-call/pkgs/container/element-call).
+
+            ```
+            docker pull ghcr.io/element-hq/element-call:${{ github.event.release.tag_name }}
+            ```
+
   publish_npm:
     needs: build_element_call
     if: always()
