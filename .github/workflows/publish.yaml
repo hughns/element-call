@@ -206,6 +206,8 @@ jobs:
       - name: Commit and tag
         working-directory: element-call-swift
         run: |
+          git config --global user.email "hughns@element.io"
+          git config --global user.name "Hugh Nimmo-Smith"
           git add -A
           git commit -am "Release ${{ env.VERSION }}"
           git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }}"
