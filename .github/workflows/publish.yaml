@@ -185,7 +185,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id || github.run_id }}
           name: build-output
-          path: element-call/embedded/ios/EmbeddedElementCall/dist
+          path: element-call/embedded/ios/Sources/dist
 
 
       - name: Get version

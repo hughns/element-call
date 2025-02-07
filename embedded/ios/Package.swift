@@ -13,6 +13,6 @@ let package = Package(
     targets: [
         .target(
             name: "EmbeddedElementCall",
-            resources: [.copy("../embedded")]),
+            resources: [.copy("../dist")]),
     ]
 )
