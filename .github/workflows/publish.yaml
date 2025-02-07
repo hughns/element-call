@@ -210,7 +210,7 @@ jobs:
           git config --global user.name "Hugh Nimmo-Smith"
           git add -A
           git commit -am "Release ${{ env.VERSION }}"
-          git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }}"
+          git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }} ${{ github.event.release.html_url }}"
           git push --tags
           
       # - name: Add release note
