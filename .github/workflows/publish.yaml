@@ -106,6 +106,7 @@ jobs:
         working-directory: embedded/web
         run: |
           npm version ${{ github.event.release.tag_name }} --no-git-tag-version
+          echo "NPM_VERSION=$(jq '.version' --raw-output package.json)" >> "$GITHUB_ENV"
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -116,4 +117,6 @@ jobs:
           append_body: true
           body: |
             ## NPM
-            - [@element-call/element-call-embedded](https://npm.pkg.github.com/package/@element-call/element-call-embedded/v/${{ github.event.release.tag_name }})
+            ```
+            npm install @hughns/element-call@${{ env.NPM_VERSION }}
+            ```
