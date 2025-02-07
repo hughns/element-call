@@ -66,7 +66,8 @@ jobs:
       - name: Add release note
         uses: softprops/action-gh-release@v2
         with:
-          append_body: |
+          append_body: true
+          body: |
             ## Docker
             Element Call is available as a Docker image from the [GitHub Container Registry](https://github.com/element-hq/element-call/pkgs/container/element-call).
 
@@ -100,7 +101,7 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@element-call'
+          scope: '@hughns'
       - name: Publish npm
         working-directory: embedded/web
         run: |
@@ -112,6 +113,7 @@ jobs:
       - name: Add release note
         uses: softprops/action-gh-release@v2
         with:
-          append_body: |
+          append_body: true
+          body: |
             ## NPM
             - [@element-call/element-call-embedded](https://npm.pkg.github.com/package/@element-call/element-call-embedded/v/${{ github.event.release.tag_name }})

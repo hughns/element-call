@@ -1,5 +1,5 @@
 {
-  "name": "@element-call/element-call-embedded",
+  "name": "@hughns/element-call",
   "version": "0.0.0",
   "files": [
     "README.md",
