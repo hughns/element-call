@@ -75,6 +75,13 @@ jobs:
           run-id: ${{ github.event.workflow_run.id || github.run_id }}
           name: build-output
           path: embedded/web/dist
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@vector-im-hugh'
       - name: Publish npm
         working-directory: embedded/web
         run: |
@@ -82,7 +89,8 @@ jobs:
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload
+
+      - name: Add release note
         uses: softprops/action-gh-release@v2
         with:
           append_body: |
