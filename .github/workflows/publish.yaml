@@ -151,6 +151,7 @@ jobs:
       - name: Publish AAR to GitHub package registry
         env:
           EC_VERSION: ${{ env.VERSION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: embedded/android/publish_android_package.sh -s
           
       - name: Add release note
