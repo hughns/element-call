@@ -120,7 +120,7 @@ jobs:
   publish_android:
     needs: build_element_call
     if: always()
-    name: Publish Android Library
+    name: Publish Android AAR
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -135,7 +135,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id || github.run_id }}
           name: build-output
-          path: embedded/android/library/dist
+          path: embedded/android/lib/src/main/assets/element-call
 
       - name: ☕️ Setup Java
         uses: actions/setup-java@v4
@@ -147,12 +147,11 @@ jobs:
         run: |
           VERSION=${{ github.event.release.tag_name }}
           echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
-          
-      - name: ⬆️ Publish
-        uses: gradle/gradle-build-action@v3
-        with:
-          build-root-directory: embedded/android
-          arguments: publish -PMAVEN_VERSION_NAME=${{ env.VERSION }}
+
+      - name: Publish AAR to GitHub package registry
+        env:
+          EC_VERSION: ${{ env.VERSION }}
+        run: embedded/android/publish_android_package.sh -s
           
       - name: Add release note
         uses: softprops/action-gh-release@v2
