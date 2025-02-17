@@ -47,7 +47,8 @@ publishing {
 }
 
 mavenPublishing {
-    signAllPublications()
+    // TODO: get signing working
+    // signAllPublications()
 
     val version = System.getenv("EC_VERSION")
     coordinates("io.element.call", "embedded-element-call", version)
