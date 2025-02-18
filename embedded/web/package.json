@@ -1,5 +1,5 @@
 {
-  "name": "@hughns/element-call",
+  "name": "@vector-im/element-call-embedded",
   "version": "0.0.0",
   "files": [
     "README.md",

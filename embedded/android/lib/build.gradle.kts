@@ -32,8 +32,8 @@ mavenPublishing {
     signAllPublications()
 
     val version = System.getenv("EC_VERSION")
-    // coordinates("io.element.call", "embedded-element-call", version)
-    coordinates("io.github.hughns", "embedded-element-call", version)
+    // coordinates("io.element.call", "element-call-embedded", version)
+    coordinates("io.github.hughns", "element-call-embedded", version)
     pom {
         name = "Embedded Element Call for Android"
         description.set("Assets needed to embed the Element Call webapp into an Android application.")
