@@ -1,7 +1,6 @@
 import { defineConfig, mergeConfig } from "vite";
 import standaloneConfig from "./vite.config";
 import generateFile from "vite-plugin-generate-file";
-import { createHtmlPlugin } from "vite-plugin-html";
 
 const base = "./";
 
