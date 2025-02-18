@@ -51,6 +51,6 @@ fi
 set -e
 echo "Publishing the Android project"
 
-./gradlew publishAllPublicationsToGithubPackagesRepository --no-daemon
+./gradlew publishAndReleaseToMavenCentral --no-daemon
 
 popd  > /dev/null

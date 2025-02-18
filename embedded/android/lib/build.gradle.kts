@@ -5,6 +5,8 @@
  * Please see LICENSE files in the repository root for full details.
  */
 
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.maven.publish)
@@ -24,37 +26,15 @@ android {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "githubPackages"
-            url = uri("https://maven.pkg.github.com/hughns/element-call")
-            // username and password (a personal Github access token) should be specified as
-            // `githubPackagesUsername` and `githubPackagesPassword` Gradle properties or alternatively
-            // as `ORG_GRADLE_PROJECT_githubPackagesUsername` and `ORG_GRADLE_PROJECT_githubPackagesPassword`
-            // environment variables
-            if (providers.gradleProperty("githubPackagesUsername").isPresent) {
-                credentials(PasswordCredentials::class)
-            } else {
-                // Assume we're in CI and try getting the GH env vars
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
-        }
-    }
-}
-
 mavenPublishing {
+    publishToMavenCentral(SonatypeHost.DEFAULT)
+
     // TODO: get signing working
     // signAllPublications()
 
     val version = System.getenv("EC_VERSION")
-    coordinates("io.element.call", "embedded-element-call", version)
-    if (!providers.gradleProperty("githubPackagesUsername").isPresent) {
-        println("WARNING: No GH credentials provided")
-    }
+    // coordinates("io.element.call", "embedded-element-call", version)
+    coordinates("com.github.hughns", "embedded-element-call", version)
     pom {
         name = "Embedded Element Call for Android"
         description.set("Assets needed to embed the Element Call webapp into an Android application.")
