@@ -6,5 +6,9 @@
     "LICENSE-AGPL-3.0",
     "LICENSE-COMMERCIAL",
     "dist"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hughns/element-call.git"
+  }
 }
