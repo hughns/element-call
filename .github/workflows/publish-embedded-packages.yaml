@@ -122,7 +122,7 @@ jobs:
           VERSION=${{ github.event.release.tag_name }}
           echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
 
-      - name: Publish AAR to GitHub package registry
+      - name: Publish AAR
         env:
           EC_VERSION: ${{ env.VERSION }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_RELEASE_USERNAME }}
