@@ -46,7 +46,7 @@ jobs:
           VITE_APP_VERSION: ${{ inputs.vite_app_version }}
           NODE_OPTIONS: "--max-old-space-size=4096"
       - name: Build embedded
-        if: ${{ !inputs.embedded }}
+        if: ${{ inputs.embedded }}
         run: "yarn run build:embedded"
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
