@@ -127,6 +127,8 @@ jobs:
           EC_VERSION: ${{ env.VERSION }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_RELEASE_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_RELEASE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SIGNING_KEY_PASSWORD }}
         run: embedded/android/publish_android_package.sh -s
 
       - name: Add release note
@@ -140,7 +142,7 @@ jobs:
 
             ```
             dependencies {
-              implementation 'com.github.hughns:embedded-element-call:${{ env.VERSION}}'
+              implementation 'io.github.hughns:embedded-element-call:${{ env.VERSION}}'
             }
             ```
 
