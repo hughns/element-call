@@ -11,6 +11,7 @@ export default defineConfig((env) =>
     standaloneConfig(env),
     defineConfig({
       base, // Use relative URLs to allow the app to be hosted under any path
+      publicDir: false, // Don't serve the public directory which only contains the favicon
       plugins: [
         generateFile([
           {
