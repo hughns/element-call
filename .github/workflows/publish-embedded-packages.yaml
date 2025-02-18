@@ -67,8 +67,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@hughns"
+          registry-url: "https://registry.npmjs.org"
       - name: Publish npm
         working-directory: embedded/web
         run: |
@@ -76,7 +75,7 @@ jobs:
           echo "NPM_VERSION=$(jq '.version' --raw-output package.json)" >> "$GITHUB_ENV"
           npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
 
       - name: Add release note
         uses: softprops/action-gh-release@v2
@@ -88,7 +87,7 @@ jobs:
             This package provides a version of Element Call that can be both used as an embedded widget within another application.
 
             ```
-            npm install @hughns/element-call@${{ env.NPM_VERSION }}
+            npm install @vector-im/element-call-embedded@${{ env.NPM_VERSION }}
             ```
 
   publish_android:
@@ -142,7 +141,7 @@ jobs:
 
             ```
             dependencies {
-              implementation 'io.github.hughns:embedded-element-call:${{ env.VERSION}}'
+              implementation 'io.github.hughns:element-call-embedded:${{ env.VERSION}}'
             }
             ```
 
@@ -197,7 +196,7 @@ jobs:
         with:
           append_body: true
           body: |
-            ## Swift PM
+            ## SwiftPM
 
             This package provides a version of Element Call that can be both used as an embedded widget within another application.
 
