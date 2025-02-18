@@ -33,7 +33,7 @@ jobs:
       - name: Create Tarball
         run: tar --numeric-owner -cvzf ${{ env.FILENAME_PREFIX }}.tar.gz ${{ env.FILENAME_PREFIX }}
       - name: Create Checksum
-        run: sha256sum ${{ env.FILENAME_PREFIX }}/**/* > ${{ env.FILENAME_PREFIX }}.sha256
+        run: sha256sum ${{ env.FILENAME_PREFIX }}/* ${{ env.FILENAME_PREFIX }}/**/* > ${{ env.FILENAME_PREFIX }}.sha256
       - name: Upload
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
