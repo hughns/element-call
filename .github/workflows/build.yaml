@@ -20,6 +20,7 @@ jobs:
     uses: ./.github/workflows/build-element-call.yaml
     with:
       vite_app_version: ${{ github.event.release.tag_name || github.sha }}
+      embedded: false
     secrets:
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
