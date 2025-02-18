@@ -27,7 +27,7 @@ android {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.DEFAULT)
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
     // TODO: get signing working
     // signAllPublications()
