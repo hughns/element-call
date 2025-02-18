@@ -87,7 +87,7 @@ jobs:
             This package provides a version of Element Call that can be both used as an embedded widget within another application.
 
             ```
-            npm install @vector-im/element-call-embedded@${{ env.NPM_VERSION }}
+            npm install @hughns/element-call-embedded@${{ env.NPM_VERSION }}
             ```
 
   publish_android:
