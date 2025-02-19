@@ -19,6 +19,7 @@ export default defineConfig((env) =>
           inject: {
             data: {
               title: env.VITE_PRODUCT_NAME || "Element Call",
+              embedded: true,
             },
           },
         }),
