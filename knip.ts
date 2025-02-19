@@ -1,7 +1,11 @@
 import { KnipConfig } from "knip";
 
 export default {
-  entry: ["src/main.tsx", "i18next-parser.config.ts"],
+  entry: [
+    "src/main/dualMode.tsx.tsx",
+    "src/main/embeddedWidget.tsx",
+    "i18next-parser.config.ts",
+  ],
   ignoreBinaries: [
     // This is deprecated, so Knip doesn't actually recognize it as a globally
     // installed binary. TODO We should switch to Compose v2:

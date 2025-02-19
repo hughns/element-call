@@ -28,10 +28,11 @@ export default defineConfig(({ mode }) => {
     }),
 
     createHtmlPlugin({
-      entry: "src/main.tsx",
+      entry: "src/main/spaOrWidget.tsx",
       inject: {
         data: {
           title: env.VITE_PRODUCT_NAME || "Element Call",
+          mode: "spaOrWidget",
         },
       },
     }),
