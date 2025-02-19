@@ -28,7 +28,20 @@ export class Config {
       const internalInstance = new Config();
       Config.internalInstance = internalInstance;
 
-      Config.internalInstance.initPromise = downloadConfig("/config.json").then(
+      let fetchTarget: string;
+
+      if (
+        window.location.pathname.endsWith("/room/") ||
+        window.location.pathname.endsWith("/room")
+      ) {
+        // it looks like we are running as an SPA so use the config at the root
+        fetchTarget = new URL("/config.json", window.location.href).href;
+      } else {
+        // otherwise we are probably running as a widget so use the config in the same directory
+        fetchTarget = "config.json";
+      }
+
+      Config.internalInstance.initPromise = downloadConfig(fetchTarget).then(
         (config) => {
           internalInstance.config = merge({}, DEFAULT_CONFIG, config);
         },
@@ -70,11 +83,8 @@ export class Config {
   private initPromise?: Promise<void>;
 }
 
-async function downloadConfig(
-  configJsonFilename: string,
-): Promise<ConfigOptions> {
-  const url = new URL(configJsonFilename, window.location.href);
-  const res = await fetch(url);
+async function downloadConfig(fetchTarget: string): Promise<ConfigOptions> {
+  const res = await fetch(fetchTarget);
 
   if (!res.ok || res.status === 404 || res.status === 0) {
     // Lack of a config isn't an error, we should just use the defaults.
