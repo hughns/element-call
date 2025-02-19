@@ -22,6 +22,7 @@ import { Initializer } from "./initializer";
 import { MediaDevicesProvider } from "./livekit/MediaDevicesContext";
 import { widget } from "./widget";
 import { useTheme } from "./useTheme";
+import { type ClientFactory } from "./client/ClientFactory";
 
 const SentryRoute = Sentry.withSentryReactRouterV7Routing(Route);
 
@@ -49,7 +50,11 @@ const ThemeProvider: FC<SimpleProviderProps> = ({ children }) => {
   return children;
 };
 
-export const App: FC = () => {
+interface AppProps {
+  clientFactory: ClientFactory;
+}
+
+export const App: FC<AppProps> = ({ clientFactory }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     Initializer.init()
@@ -70,7 +75,7 @@ export const App: FC = () => {
           <TooltipProvider>
             {loaded ? (
               <Suspense fallback={null}>
-                <ClientProvider>
+                <ClientProvider clientFactory={clientFactory}>
                   <MediaDevicesProvider>
                     <Sentry.ErrorBoundary fallback={ErrorPage}>
                       <DisconnectedBanner />

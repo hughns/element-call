@@ -21,7 +21,6 @@ import { logger } from "matrix-js-sdk/src/logger";
 import { type ISyncStateData, type SyncState } from "matrix-js-sdk/src/sync";
 import { ClientEvent, type MatrixClient } from "matrix-js-sdk/src/client";
 
-import type { WidgetApi } from "matrix-widget-api";
 import { ErrorPage } from "./FullScreenView";
 import { widget } from "./widget";
 import {
@@ -30,6 +29,8 @@ import {
 } from "./analytics/PosthogAnalytics";
 import { useEventTarget } from "./useEvents";
 import { OpenElsewhereError } from "./RichError";
+import { type InitResult } from "./client/InitResult";
+import { type ClientFactory } from "./client/ClientFactory";
 
 declare global {
   interface Window {
@@ -141,9 +142,10 @@ const loadChannel =
 
 interface Props {
   children: JSX.Element;
+  clientFactory: ClientFactory;
 }
 
-export const ClientProvider: FC<Props> = ({ children }) => {
+export const ClientProvider: FC<Props> = ({ children, clientFactory }) => {
   const navigate = useNavigate();
 
   // null = signed out, undefined = loading
@@ -159,11 +161,12 @@ export const ClientProvider: FC<Props> = ({ children }) => {
     if (initializing.current) return;
     initializing.current = true;
 
-    loadClient()
+    clientFactory
+      .loadClient(loadSession, clearSession)
       .then(setInitClientState)
       .catch((err) => logger.error(err))
       .finally(() => (initializing.current = false));
-  }, []);
+  }, [clientFactory]);
 
   const changePassword = useCallback(
     async (password: string) => {
@@ -358,28 +361,6 @@ export const ClientProvider: FC<Props> = ({ children }) => {
     <ClientContext.Provider value={state}>{children}</ClientContext.Provider>
   );
 };
-
-export type InitResult = {
-  widgetApi: WidgetApi | null;
-  client: MatrixClient;
-  passwordlessUser: boolean;
-};
-
-async function loadClient(): Promise<InitResult | null> {
-  if (widget) {
-    // We're inside a widget, so let's engage *matryoshka mode*
-    logger.log("Using a matryoshka client");
-    const client = await widget.client;
-    return {
-      widgetApi: widget.api,
-      client,
-      passwordlessUser: false,
-    };
-  } else {
-    const { initSPA } = await import("./utils/spa");
-    return initSPA(loadSession, clearSession);
-  }
-}
 
 export interface Session {
   user_id: string;
