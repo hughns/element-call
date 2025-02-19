@@ -43,7 +43,8 @@ const locales = import.meta.glob<string>("../locales/*/*.json", {
 const getLocaleUrl = (
   language: string,
   namespace: string,
-): string | undefined => locales[`../locales/${language}/${namespace}.json`];
+): string | undefined =>
+  import.meta.resolve(locales[`../locales/${language}/${namespace}.json`]);
 
 const supportedLngs = [
   ...new Set(
