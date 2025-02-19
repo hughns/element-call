@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
       inject: {
         data: {
           title: env.VITE_PRODUCT_NAME || "Element Call",
-          embedded: false,
+          mode: "spaOrWidget",
         },
       },
     }),

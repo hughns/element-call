@@ -15,11 +15,12 @@ export default defineConfig((env) =>
       publicDir: false, // Don't serve the public directory which only contains the favicon
       plugins: [
         createHtmlPlugin({
+          // FIXME: this isn't actually get applied during the build
           entry: "src/main/embeddedWidgetOnly.tsx",
           inject: {
             data: {
               title: env.VITE_PRODUCT_NAME || "Element Call",
-              embedded: true,
+              mode: "embeddedWidgetOnly",
             },
           },
         }),
