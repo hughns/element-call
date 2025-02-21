@@ -6,6 +6,7 @@ Please see LICENSE in the repository root for full details.
 */
 
 import { merge } from "lodash-es";
+import { logger } from "matrix-js-sdk/src/logger";
 
 import { getUrlParams } from "../UrlParams";
 import {
@@ -86,10 +87,15 @@ export class Config {
 async function downloadConfig(fetchTarget: string): Promise<ConfigOptions> {
   const res = await fetch(fetchTarget);
 
-  if (!res.ok || res.status === 404 || res.status === 0) {
+  // if we are running embedded on file:// origin then we can't trust the response status
+  if (
+    window.origin !== "file://" &&
+    (!res.ok || res.status === 404 || res.status === 0)
+  ) {
     // Lack of a config isn't an error, we should just use the defaults.
     // Also treat a blank config as no config, assuming the status code is 0, because we don't get 404s from file:
     // URIs so this is the only way we can not fail if the file doesn't exist when loading from a file:// URI.
+    logger.info("No config file found, using defaults");
     return DEFAULT_CONFIG;
   }
 

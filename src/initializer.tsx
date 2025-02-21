@@ -43,8 +43,7 @@ const locales = import.meta.glob<string>("../locales/*/*.json", {
 const getLocaleUrl = (
   language: string,
   namespace: string,
-): string | undefined =>
-  import.meta.resolve(locales[`../locales/${language}/${namespace}.json`]);
+): string | undefined => locales[`../locales/${language}/${namespace}.json`];
 
 const supportedLngs = [
   ...new Set(
@@ -66,13 +65,14 @@ const Backend = {
   init(): void {},
   read(language: string, namespace: string, callback: ReadCallback): void {
     (async (): Promise<ResourceKey> => {
-      const url = getLocaleUrl(language, namespace);
-      if (!url) {
+      const urlString = getLocaleUrl(language, namespace);
+      if (!urlString) {
         throw new Error(
           `Namespace ${namespace} for locale ${language} not found`,
         );
       }
 
+      const url = new URL(urlString);
       const response = await fetch(url, {
         credentials: "omit",
         headers: {
@@ -80,7 +80,8 @@ const Backend = {
         },
       });
 
-      if (!response.ok) {
+      // fetch will always return ok === false for file:// URLs
+      if (!response.ok && url.protocol !== "file:") {
         throw Error(`Failed to fetch ${url}`);
       }
 
