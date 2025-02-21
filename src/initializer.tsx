@@ -65,14 +65,13 @@ const Backend = {
   init(): void {},
   read(language: string, namespace: string, callback: ReadCallback): void {
     (async (): Promise<ResourceKey> => {
-      const urlString = getLocaleUrl(language, namespace);
-      if (!urlString) {
+      const url = getLocaleUrl(language, namespace);
+      if (!url) {
         throw new Error(
           `Namespace ${namespace} for locale ${language} not found`,
         );
       }
 
-      const url = new URL(urlString);
       const response = await fetch(url, {
         credentials: "omit",
         headers: {
@@ -81,7 +80,10 @@ const Backend = {
       });
 
       // fetch will always return ok === false for file:// URLs
-      if (!response.ok && url.protocol !== "file:") {
+      if (
+        !response.ok &&
+        (!response.url || !response.url.startsWith("file:"))
+      ) {
         throw Error(`Failed to fetch ${url}`);
       }
 

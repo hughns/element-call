@@ -85,13 +85,10 @@ export class Config {
 }
 
 async function downloadConfig(fetchTarget: string): Promise<ConfigOptions> {
-  const res = await fetch(fetchTarget);
+  const response = await fetch(fetchTarget);
 
   // if we are running embedded on file:// origin then we can't trust the response status
-  if (
-    window.origin !== "file://" &&
-    (!res.ok || res.status === 404 || res.status === 0)
-  ) {
+  if (!response.ok && (!response.url || !response.url.startsWith("file:"))) {
     // Lack of a config isn't an error, we should just use the defaults.
     // Also treat a blank config as no config, assuming the status code is 0, because we don't get 404s from file:
     // URIs so this is the only way we can not fail if the file doesn't exist when loading from a file:// URI.
@@ -99,5 +96,5 @@ async function downloadConfig(fetchTarget: string): Promise<ConfigOptions> {
     return DEFAULT_CONFIG;
   }
 
-  return res.json();
+  return response.json();
 }
