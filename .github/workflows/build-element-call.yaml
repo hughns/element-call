@@ -5,6 +5,9 @@ on:
       vite_app_version:
         required: true
         type: string
+      embedded:
+        required: true
+        type: boolean
     secrets:
       SENTRY_ORG:
         required: false
@@ -31,8 +34,20 @@ jobs:
           node-version-file: ".node-version"
       - name: Install dependencies
         run: "yarn install --frozen-lockfile"
-      - name: Build
+      - name: Build full version
+        if: ${{ !inputs.embedded }}
         run: "yarn run build"
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          VITE_APP_VERSION: ${{ inputs.vite_app_version }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
+      - name: Build embedded
+        if: ${{ inputs.embedded }}
+        run: "yarn run build:embedded"
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
