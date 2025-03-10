@@ -7,7 +7,7 @@ Please see LICENSE in the repository root for full details.
 
 import { defineConfig, loadEnv } from "vite";
 import svgrPlugin from "vite-plugin-svgr";
-import htmlTemplate from "vite-plugin-html-template";
+import { createHtmlPlugin } from "vite-plugin-html";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
@@ -16,7 +16,6 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-
   const plugins = [
     react(),
     basicSsl(),
@@ -27,9 +26,13 @@ export default defineConfig(({ mode }) => {
         ref: true,
       },
     }),
-    htmlTemplate.default({
-      data: {
-        brand: env.VITE_PRODUCT_NAME || "Element Call",
+
+    createHtmlPlugin({
+      entry: "src/main.tsx",
+      inject: {
+        data: {
+          brand: env.VITE_PRODUCT_NAME || "Element Call",
+        },
       },
     }),
 
